@@ -53,7 +53,7 @@ class WarnPlugin(commands.Cog):
         """
 
         if member.bot:
-            return await ctx.send("Bots can't be warned.")
+            return await ctx.send("Los bots no pueden ser warneados.")
 
         channel_config = await self.db.find_one({"_id": "config"})
 
@@ -86,7 +86,7 @@ class WarnPlugin(commands.Cog):
             {"_id": "warns"}, {"$set": {str(member.id): userw}}, upsert=True
         )
 
-        await ctx.send(f"Successfully warned **{member}**\n`{reason}`")
+        await ctx.send(f"**{member}** ha sido avisado con éxito\n`{reason}`")
 
         await channel.send(
             embed=await self.generateWarnEmbed(
@@ -99,9 +99,9 @@ class WarnPlugin(commands.Cog):
     @commands.command()
     @checks.has_permissions(PermissionLevel.MODERATOR)
     async def pardon(self, ctx, member: discord.Member, *, reason: str):
-        """Remove all warnings of a  member.
+        """Borrar todos los avisos de un miembro.
         Usage:
-        {prefix}pardon @member Nice guy
+        {prefix}pardon @member Buen chico
         """
 
         if member.bot:
@@ -125,28 +125,28 @@ class WarnPlugin(commands.Cog):
         try:
             userwarns = config[str(member.id)]
         except KeyError:
-            return await ctx.send(f"{member} doesn't have any warnings.")
+            return await ctx.send(f"{member} no tiene ningún aviso.")
 
         if userwarns is None:
-            await ctx.send(f"{member} doesn't have any warnings.")
+            await ctx.send(f"{member} no tiene ningún aviso.")
 
         await self.db.find_one_and_update(
             {"_id": "warns"}, {"$set": {str(member.id): []}}
         )
 
-        await ctx.send(f"Successfully pardoned **{member}**\n`{reason}`")
+        await ctx.send(f"**{member}** ha sido perdonado con éxito\n`{reason}`")
 
         embed = discord.Embed(color=discord.Color.blue())
 
         embed.set_author(
             name=f"Pardon | {member}", icon_url=member.avatar_url,
         )
-        embed.add_field(name="User", value=f"{member}")
+        embed.add_field(name="Usuario", value=f"{member}")
         embed.add_field(
-            name="Moderator", value=f"<@{ctx.author.id}> - `{ctx.author}`",
+            name="Moderador", value=f"<@{ctx.author.id}> - `{ctx.author}`",
         )
-        embed.add_field(name="Reason", value=reason)
-        embed.add_field(name="Total Warnings", value="0")
+        embed.add_field(name="Razón", value=reason)
+        embed.add_field(name="Avisos totales", value="0")
 
         return await channel.send(embed=embed)
 
@@ -159,10 +159,10 @@ class WarnPlugin(commands.Cog):
         embed.set_author(
             name=f"Warn | {member}", icon_url=member.avatar_url,
         )
-        embed.add_field(name="User", value=f"{member}")
-        embed.add_field(name="Moderator", value=f"<@{modid}>` - ({mod})`")
-        embed.add_field(name="Reason", value=reason)
-        embed.add_field(name="Total Warnings", value=warning)
+        embed.add_field(name="Usuario", value=f"{member}")
+        embed.add_field(name="Moderador", value=f"<@{modid}>` - ({mod})`")
+        embed.add_field(name="Razón", value=reason)
+        embed.add_field(name="Avisos totales", value=warning)
         return embed
 
 
