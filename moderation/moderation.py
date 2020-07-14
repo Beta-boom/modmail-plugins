@@ -54,21 +54,21 @@ class ModerationPlugin(commands.Cog):
         *,
         reason: str = None,
     ):
-        """Ban one or more users.
-                Usage:
-                {prefix}ban @member 10 Advertising their own products
-                {prefix}ban @member1 @member2 @member3 Spamming
+        """Banea a uno o más usuarios.
+                Uso:
+                {prefix}ban @miembro 10 Hacer promoción de sus productos
+                {prefix}ban @miembro1 @miembro2 @miembro3 Spammear
                 """
 
         config = await self.db.find_one({"_id": "config"})
 
         if config is None:
-            return await ctx.send("There's no configured log channel.")
+            return await ctx.send("No hay un canal de logs configurado.")
         else:
             channel = ctx.guild.get_channel(int(config["channel"]))
 
         if channel is None:
-            await ctx.send("There is no configured log channel.")
+            await ctx.send("No hay un canal de logs configurado.")
             return
 
         try:
@@ -88,7 +88,7 @@ class ModerationPlugin(commands.Cog):
                 )
 
                 if reason:
-                    embed.add_field(name="Reason", value=reason, inline=False)
+                    embed.add_field(name="Razón", value=reason, inline=False)
 
                 await ctx.send(f"🚫 | {member} is banned!")
                 await channel.send(embed=embed)
