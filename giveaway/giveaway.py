@@ -159,6 +159,7 @@ class GiveawayPlugin(commands.Cog):
 
                 embed = message.embeds[0]
                 embed.description = (
+                    f"@Sorteos\n\n"
                     f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
                     f"Tiempo restante: **{time_remaining}**"
                 )
@@ -267,8 +268,9 @@ class GiveawayPlugin(commands.Cog):
             return
 
         embed.description = (
+            f"@Sorteos\n\n"
             f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
-            f"Time Remaining: **{datetime.fromtimestamp(giveaway_time).strftime('%d %H:%M:%S')}**"
+            f"Tiempo restante: **{datetime.fromtimestamp(giveaway_time).strftime('%d %H:%M:%S')}**"
         )
         embed.set_footer(
             text=f"{giveaway_winners} {'winners' if giveaway_winners > 1 else 'winner'} | Termina a las"
@@ -368,13 +370,13 @@ class GiveawayPlugin(commands.Cog):
                 for winner in winners:
                     winners_text += f"<@{winner}> "
 
-                embed.description = f"¡El sorteo ha terminado!\n\n**{'Winners' if winners_count > 1 else 'Winner'}:** {winners_text}"
+                embed.description = f"¡El sorteo ha terminado!\n\n**{'Ganadores' if winners_count > 1 else 'Ganador'}:** {winners_text}"
                 embed.set_footer(
                     text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ha terminado a las"
                 )
                 await message.edit(embed=embed)
                 await ctx.channel.send(
-                    f"🎉 Congratulations {winners_text}, you have won **{embed.title}**!"
+                    f"🎉 ¡Felicidades {winners_text}! Has ganado **{embed.title}**"
                 )
                 del winners_text, winners, winners_count, reacted_users, embed
                 break
@@ -390,7 +392,7 @@ class GiveawayPlugin(commands.Cog):
         """
 
         if _id not in self.active_giveaways:
-            await ctx.send("Couldn't find an active giveaway with that ID!")
+            await ctx.send("¡No he podido encontrar un sorteo activo con esa ID!")
             return
 
         giveaway = self.active_giveaways[_id]
@@ -398,10 +400,10 @@ class GiveawayPlugin(commands.Cog):
         try:
             message = await channel.fetch_message(int(_id))
         except discord.Forbidden:
-            await ctx.send("No permission to read the history.")
+            await ctx.send("No tengo permisos para leer el historial de mensajes.")
             return
         except discord.NotFound:
-            await ctx.send("Message not found.")
+            await ctx.send("Mensaje no encontrado.")
             return
 
         if not message.embeds or message.embeds[0] is None:
@@ -411,11 +413,11 @@ class GiveawayPlugin(commands.Cog):
             return
 
         embed = message.embeds[0]
-        embed.description = "The giveaway has been cancelled."
+        embed.description = "El sorteo ha sido cancelado."
         await message.edit(embed=embed)
         self.active_giveaways.pop(_id)
         await self._update_db()
-        await ctx.send("Cancelled!")
+        await ctx.send("¡Cancelado!")
         return
 
     async def _start_new_giveaway_thread(self, obj):
