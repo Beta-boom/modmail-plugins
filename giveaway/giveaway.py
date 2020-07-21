@@ -159,7 +159,7 @@ class GiveawayPlugin(commands.Cog):
 
                 embed = message.embeds[0]
                 embed.description = (
-                    f"<@&734795892112097421>\n\n"
+                    f"<@734795892112097421>\n\n"
                     f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
                     f"Tiempo restante: **{time_remaining}**"
                 )
@@ -268,7 +268,7 @@ class GiveawayPlugin(commands.Cog):
             return
 
         embed.description = (
-            f"<@&734795892112097421>\n\n"
+            f"<@734795892112097421>\n\n"
             f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
             f"Tiempo restante: **{datetime.fromtimestamp(giveaway_time).strftime('%d %H:%M:%S')}**"
         )
