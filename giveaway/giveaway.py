@@ -84,10 +84,10 @@ class GiveawayPlugin(commands.Cog):
                 if len(message.reactions) <= 0:
                     embed = message.embeds[0]
                     embed.description = (
-                        f"Giveaway has ended!\n\nSadly no one participated :("
+                        f"¡El sorteo ha terminado!\n\nPero nadie ha participado :("
                     )
                     embed.set_footer(
-                        text=f"{giveaway['winners']} {'winners' if giveaway['winners'] > 1 else 'winner'} | Ended at"
+                        text=f"{giveaway['winners']} {'winners' if giveaway['winners'] > 1 else 'winner'} | Terminado a las"
                     )
                     await message.edit(embed=embed)
                     break
@@ -104,11 +104,11 @@ class GiveawayPlugin(commands.Cog):
                         if len(reacted_users) <= 1:
                             embed = message.embeds[0]
                             embed.description = (
-                                f"Giveaway has ended!\n\nSadly no one participated :("
+                                f"¡El sorteo ha terminado!\n\nPero nadie ha participado :("
                             )
                             embed.set_footer(
                                 text=f"{giveaway['winners']} {'winners' if giveaway['winners'] > 1 else 'winner'} | "
-                                f"Ended at"
+                                f"Terminado a las"
                             )
                             await message.edit(embed=embed)
                             del guild, channel, reacted_users, embed
@@ -133,14 +133,14 @@ class GiveawayPlugin(commands.Cog):
                         for winner in winners:
                             winners_text += f"<@{winner}> "
 
-                        embed.description = f"Giveaway has ended!\n\n**{'Winners' if giveaway['winners'] > 1 else 'Winner'}:** {winners_text} "
+                        embed.description = f"¡El sorteo ha terminado!\n\n**{'Winners' if giveaway['winners'] > 1 else 'Winner'}:** {winners_text} "
                         embed.set_footer(
                             text=f"{giveaway['winners']} {'winners' if giveaway['winners'] > 1 else 'winner'} | "
-                            f"Ended at"
+                            f"Terminado a las"
                         )
                         await message.edit(embed=embed)
                         await channel.send(
-                            f"🎉 Congratulations {winners_text}, you have won **{giveaway['item']}**!"
+                            f"🎉 ¡Felicidades {winners_text}! Has ganado **{giveaway['item']}**!"
                         )
                         try:
                             self.active_giveaways.pop(str(giveaway["message"]))
@@ -159,8 +159,8 @@ class GiveawayPlugin(commands.Cog):
 
                 embed = message.embeds[0]
                 embed.description = (
-                    f"React with 🎉 to enter the giveaway!\n\n"
-                    f"Time Remaining: **{time_remaining}**"
+                    f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
+                    f"Tiempo restante: **{time_remaining}**"
                 )
                 await message.edit(embed=embed)
                 del channel, guild
@@ -203,18 +203,18 @@ class GiveawayPlugin(commands.Cog):
 
         embed = discord.Embed(colour=0x00FF00)
 
-        await ctx.send(embed=self.generate_embed("What is the giveaway item?"))
+        await ctx.send(embed=self.generate_embed("¿Qué se va a sortear?"))
         giveaway_item = await self.bot.wait_for("message", check=check)
         if cancel_check(giveaway_item) is True:
-            await ctx.send("Cancelled.")
+            await ctx.send("Cancelado.")
             return
         embed.title = giveaway_item.content
         await ctx.send(
-            embed=self.generate_embed("How many winners are to be selected?")
+            embed=self.generate_embed("¿Cuántos ganadores habrá?")
         )
         giveaway_winners = await self.bot.wait_for("message", check=check)
         if cancel_check(giveaway_winners) is True:
-            await ctx.send("Cancelled.")
+            await ctx.send("Cancelado.")
             return
         try:
             giveaway_winners = int(giveaway_winners.content)
@@ -227,7 +227,7 @@ class GiveawayPlugin(commands.Cog):
 
         if giveaway_winners <= 0:
             await ctx.send(
-                "Giveaway can only be held with 1 or more winners. Cancelling command."
+                "Los sorteos sólo se pueden hacer con uno o más ganadores. Cancelando comando."
             )
             return
 
@@ -243,7 +243,7 @@ class GiveawayPlugin(commands.Cog):
             giveaway_time = await self.bot.wait_for("message", check=check)
             if cancel_check(giveaway_time) is True:
                 time_cancel = True
-                await ctx.send("Cancelled.")
+                await ctx.send("Cancelado.")
                 break
             resp = await self.bot.session.get(
                 "https://dateparser.piyush.codes",
@@ -267,11 +267,11 @@ class GiveawayPlugin(commands.Cog):
             return
 
         embed.description = (
-            f"React with 🎉 to enter the giveaway!\n\n"
+            f"¡Reacciona con 🎉 para entrar al sorteo!\n\n"
             f"Time Remaining: **{datetime.fromtimestamp(giveaway_time).strftime('%d %H:%M:%S')}**"
         )
         embed.set_footer(
-            text=f"{giveaway_winners} {'winners' if giveaway_winners > 1 else 'winner'} | Ends at"
+            text=f"{giveaway_winners} {'winners' if giveaway_winners > 1 else 'winner'} | Termina a las"
         )
         embed.timestamp = datetime.fromtimestamp(giveaway_time)
         msg: discord.Message = await channel.send(embed=embed)
@@ -301,7 +301,7 @@ class GiveawayPlugin(commands.Cog):
 
         # Don't roll if giveaway is active
         if _id in self.active_giveaways:
-            await ctx.send("Sorry, but you can't reroll an active giveaway.")
+            await ctx.send("Lo siento, pero no puedes hacer reroll a un sorteo activo.")
             return
 
         async def get_random_user(users, _guild, _winners):
@@ -317,10 +317,10 @@ class GiveawayPlugin(commands.Cog):
         try:
             message = await ctx.channel.fetch_message(int(_id))
         except discord.Forbidden:
-            await ctx.send("No permission to read the history.")
+            await ctx.send("No tengo permiso para leer el historial de mensajes.")
             return
         except discord.NotFound:
-            await ctx.send("Message not found.")
+            await ctx.send("Mensaje no encontrado.")
             return
 
         if not message.embeds or message.embeds[0] is None:
@@ -331,7 +331,7 @@ class GiveawayPlugin(commands.Cog):
 
         if len(message.reactions) <= 0:
             embed = message.embeds[0]
-            embed.description = f"Giveaway has ended!\n\nSadly no one participated :("
+            embed.description = f"¡El sorteo ha terminado!\n\nPero nadie ha participado :("
             embed.set_footer(
                 text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ended at"
             )
@@ -345,7 +345,7 @@ class GiveawayPlugin(commands.Cog):
                 if len(reacted_users) <= 1:
                     embed = message.embeds[0]
                     embed.description = (
-                        f"Giveaway has ended!\n\nSadly no one participated :("
+                        f"¡El sorteo ha terminado!\n\nPero nadie ha participado :("
                     )
                     await message.edit(embed=embed)
                     del reacted_users, embed
@@ -368,7 +368,7 @@ class GiveawayPlugin(commands.Cog):
                 for winner in winners:
                     winners_text += f"<@{winner}> "
 
-                embed.description = f"Giveaway has ended!\n\n**{'Winners' if winners_count > 1 else 'Winner'}:** {winners_text}"
+                embed.description = f"¡El sorteo ha terminado\n\n**{'Winners' if winners_count > 1 else 'Winner'}:** {winners_text}"
                 embed.set_footer(
                     text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ended at"
                 )
