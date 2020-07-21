@@ -333,7 +333,7 @@ class GiveawayPlugin(commands.Cog):
             embed = message.embeds[0]
             embed.description = f"¡El sorteo ha terminado!\n\nPero nadie ha participado :("
             embed.set_footer(
-                text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ended at"
+                text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ha terminado a las"
             )
             await message.edit(embed=embed)
             return
@@ -368,9 +368,9 @@ class GiveawayPlugin(commands.Cog):
                 for winner in winners:
                     winners_text += f"<@{winner}> "
 
-                embed.description = f"¡El sorteo ha terminado\n\n**{'Winners' if winners_count > 1 else 'Winner'}:** {winners_text}"
+                embed.description = f"¡El sorteo ha terminado!\n\n**{'Winners' if winners_count > 1 else 'Winner'}:** {winners_text}"
                 embed.set_footer(
-                    text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ended at"
+                    text=f"{winners_count} {'winners' if winners_count > 1 else 'winner'} | Ha terminado a las"
                 )
                 await message.edit(embed=embed)
                 await ctx.channel.send(
