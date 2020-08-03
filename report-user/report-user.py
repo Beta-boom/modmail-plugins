@@ -9,7 +9,7 @@ from core.models import PermissionLevel
 
 class ReportUser(commands.Cog):
     """
-    Report a user to staff
+    Reporta un usuario al staff
     """
 
     def __init__(self, bot):
@@ -17,7 +17,7 @@ class ReportUser(commands.Cog):
         self.db = bot.plugin_db.get_partition(self)
         self.blacklist = []
         self.channel = None
-        self.message = "Thanks for reporting, our Staff will look into it soon."
+        self.message = "Gracias por reportar, nuestro staff va a investigar el caso. Recuerda que usar mal este comando puede conllevar una sanción."
         self.current_case = 1
         asyncio.create_task(self._set_config())
 
@@ -30,7 +30,7 @@ class ReportUser(commands.Cog):
             self.channel = config.get("channel", None)
             self.current_case = config.get("case", 1)
             self.message = config.get(
-                "message", "Thanks for reporting, our Staff will look into it soon."
+                "message", "Gracias por reportar, nuestro staff va a investigar el caso. Recuerda que usar mal este comando puede conllevar una sanción."
             )
 
     async def update(self):
@@ -92,7 +92,7 @@ class ReportUser(commands.Cog):
             {"_id": "config"}, {"$set": {"message": msg}}, upsert=True
         )
         self.message = msg
-        await ctx.send("Done!")
+        await ctx.send("¡Hecho!")
 
     @commands.command()
     async def report(
@@ -118,14 +118,14 @@ class ReportUser(commands.Cog):
                 name=f"{ctx.author.name}#{ctx.author.discriminator}",
                 icon_url=ctx.author.avatar_url,
             )
-            embed.title = "User Report"
+            embed.title = "Reporte"
             embed.add_field(
-                name="Against",
+                name="Contra",
                 value=f"{member.name}#{member.discriminator}",
                 inline=False,
             )
-            embed.add_field(name="Reason", value=reason, inline=False)
-            embed.set_footer(text=f"Case {self.current_case}")
+            embed.add_field(name="Razón", value=reason, inline=False)
+            embed.set_footer(text=f"Caso {self.current_case}")
             m: discord.Message = await channel.send(embed=embed)
             await ctx.author.send(self.message)
             await ctx.message.delete()
@@ -159,13 +159,13 @@ class ReportUser(commands.Cog):
                 name="By", value=f"{user1.name}#{user1.discriminator}", inline=False
             )
             embed.add_field(
-                name="Against",
+                name="Ha reportado a:",
                 value=f"{user2.name}#{user2.discriminator}",
                 inline=False,
             )
-            embed.add_field(name="Reason", value=case["reason"], inline=False)
+            embed.add_field(name="Razón", value=case["reason"], inline=False)
             embed.add_field(name="Resolved", value=case["resolved"], inline=False)
-            embed.title = "Report Log"
+            embed.title = "Log de reportes"
             await ctx.send(embed=embed)
 
     @commands.Cog.listener()
@@ -196,7 +196,7 @@ class ReportUser(commands.Cog):
             return
 
         if casedb["resolved"] is True:
-            await channel.send(f"Case `#{case}`Already resolved.")
+            await channel.send(f"El reporte `#{case}` ya ha sido resuelto.")
             return
 
         def check(messge: discord.Message):
@@ -205,11 +205,11 @@ class ReportUser(commands.Cog):
                 and payload.channel_id == messge.channel.id
             )
 
-        await channel.send("Enter Your Report which will be sent to the reporter")
+        await channel.send("Escribe el mensaje que vamos a enviar a la persona que ha reportado")
         reportr = await self.bot.wait_for("message", check=check)
         user1 = self.bot.get_user(int(casedb["author"]))
-        await user1.send(f"**Reply From Staff Team:**\n{reportr.content}")
-        await channel.send("DM'd")
+        await user1.send(f"**Respuesta del staff:**\n{reportr.content}")
+        await channel.send("¡Enviado por mensaje directo!")
         await self.db.find_one_and_update({"case": case}, {"$set": {"resolved": True}})
         return
 
