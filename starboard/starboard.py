@@ -9,8 +9,8 @@ from core.models import PermissionLevel
 
 class StarboardPlugin(commands.Cog):
     """
-    A starboard is a popular feature in bots that serve as a channel of messages that users of the server find funny, stupid, or both.
-    With this plugin, you can add starboard service to your Modmail bot.
+    Starboard es una función popular en bots que sirve para crear un canal de mensajes que los usuarios del servidor ven como graciosos, estúpidos, o ambos.
+    Con este plugin, puedes añadir el servicio Starboard a to bot creado con Modmail.
     """
 
     def __init__(self, bot):
@@ -58,30 +58,29 @@ class StarboardPlugin(commands.Cog):
     @checks.has_permissions(PermissionLevel.ADMIN)
     async def channel(self, ctx: commands.Context, channel: discord.TextChannel):
         """
-        Set the starboard channel where the messages will go
+        Configura el canal de destino de los mensajes del Starboard
 
-        **Usage:**
-        starboard channel **#this-is-a-channel**
+        **Uso:**
+        starboard channel **#tu-canal**
         """
         self.channel = str(channel.id)
         await self._update_db()
 
-        await ctx.send(f"Done! {channel.mention} is the Starboard Channel now!")
+        await ctx.send(f"¡Hecho! {channel.mention} es el canal Starboard.")
 
     @starboard.command(aliases=["setstars", "ss"])
     @checks.has_permissions(PermissionLevel.ADMIN)
     async def stars(self, ctx: commands.Context, stars: int):
         """
-        Set the number of stars the message needs to appear on the starboard channel
-
-        **Usage:**
+        Configura el número de estrellas que necesita un mensaje para aparecer en Starboard.
+        **Uso:**
         starboard stars 2
         """
         self.stars = stars
         await self._update_db()
 
         await ctx.send(
-            f"Done.Now this server needs `{stars}` :star: to appear on the starboard channel."
+            f"¡Hecho! De ahora en adelante, los mensajes necesitarán `{stars}` :star: para aparecer en Starboard."
         )
 
     @starboard.group()
@@ -94,10 +93,10 @@ class StarboardPlugin(commands.Cog):
     @checks.has_permissions(PermissionLevel.ADMIN)
     async def member(self, ctx: commands.Context, member: discord.Member):
         """
-        Blacklist a user so that the user's reaction dosen't get counted
+        Añade un usuario a la lista negra. La reacción de este no contará para Starboard.
 
-        **Usage:**
-        starboard blacklist member @user
+        **Uso:**
+        starboard blacklist member @mención
         """
 
         if str(member.id) in self.user_blacklist:
@@ -118,10 +117,10 @@ class StarboardPlugin(commands.Cog):
         self, ctx: commands.Context, channel: discord.TextChannel
     ):
         """
-        Blacklist Channels so that messages sent in those channels dont appear on starboard
+        Añade un canal a la lista negra. Los mensajes en este canal no podrán estar en Starboard
 
-        **Usage:**
-        starboard blacklist channel **#channel**
+        **Uso:**
+        starboard blacklist channel **#tu-canal**
         """
         if str(channel.id) in self.channel_blacklist:
             self.channel_blacklist.pop(str(channel.id))
